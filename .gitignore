@@ -50,6 +50,8 @@ MANIFEST
 *.db
 log/
 *.log
+db/
+postgres_data/
 
 # --- IDEs and Tools ---
 .idea/
@@ -58,3 +60,4 @@ log/
 *.sublime-workspace
 # Obsidian metadata if you keep vault in repo
 .obsidian/
+.DS_Store

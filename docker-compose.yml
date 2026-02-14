@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # --- Сервис Бекенда (Python) ---
+  backend:
+    build: ./backend
+    container_name: akinator_backend
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/akinator_db
+
+  # --- Сервис Фронтенда (Nginx) ---
+  frontend:
+    image: nginx:alpine
+    container_name: akinator_frontend
+    volumes:
+      - ./frontend/src:/usr/share/nginx/html
+    ports:
+      - "80:80"
+
+  # --- База данных (PostgreSQL) ---
+  db:
+    image: postgres:15-alpine
+    container_name: akinator_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: akinator_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432" 
+
+volumes:
+  postgres_data:
