@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akinator</title>
+    <link rel="stylesheet" href="../styles/answer.css">
+</head>
+<body>
+    <header>
+        <h1>Ответ на вопрос</h1>
+    </header>
+    <main>
+        <section id="game">
+            <h2 id="current-answer">Загрузка ответа...</h2>
+
+            <img id="answer-image" src="" alt="Фото знаменитости" style="display: none;">
+            <button id="next-question" onclick="location.href='start_game.html'">Следующий вопрос</button><br>
+            <button id="end-game" onclick="location.href='home_page.html'">Закончить игру</button><br>
+        </section>
+    </main>
+    <footer>
+        <br><br>
+        <button id="autors" onclick="location.href='authors.html'">Авторы</button><br>
+        <p>&copy; 2026 Akinator</p>
+    </footer>
+    <script src="answer.js"></script>
+</body>
+</html>
