@@ -16,6 +16,7 @@ class CharacterGuess(BaseModel):
 
 class GameAnswerRequest(BaseModel):
     session_id: str
+    question_id: int
     answer_id: int
 
 class GameFeedbackRequest(BaseModel):
