@@ -1,0 +1,23 @@
+#current-answer{ margin:0 0 10px 0; font-size:1.2rem }
+
+.answer-btn, #next-question, #end-game, #autors{
+  display:inline-block;
+  margin:8px 6px;
+  padding:10px 18px;
+  font-size:1rem;
+  color:#fff;
+  border:0;
+  border-radius:8px;
+  cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease, opacity .12s;
+}
+
+#next-question{ background:#2b6cb0 }
+#end-game{ background:#e53e3e }
+#autors{ background:#38a169 }
+
+.answer-btn:hover, #next-question:hover, #end-game:hover, #autors:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 20px rgba(16,24,40,0.08);
+  opacity:0.98;
+}
