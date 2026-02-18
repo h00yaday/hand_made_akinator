@@ -18,7 +18,7 @@ export default function Home(){
     <div>
       <header><h1>Акинатор</h1></header>
       <main>
-        <button onClick={start} disabled={loading}>Старт</button>
+        <button id="start-button" onClick={start} disabled={loading}>Старт</button>
 
         {loading && <Loader />}
         <ErrorToast message={error} onClose={()=>setError(null)} />

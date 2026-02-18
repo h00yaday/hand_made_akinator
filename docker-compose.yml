@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # --- Сервис Бекенда (Python) ---
   backend:
     build: ./backend
     container_name: akinator_backend
@@ -12,18 +11,20 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgresql://user:password@db:5432/akinator_db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=akinator_db
+      - POSTGRES_HOST=db
 
-  # --- Сервис Фронтенда (Nginx) ---
   frontend:
-    image: nginx:alpine
+    # Теперь мы строим из Dockerfile, а не берем готовый image
+    build: ./frontend
     container_name: akinator_frontend
-    volumes:
-      - ./frontend/src:/usr/share/nginx/html
     ports:
       - "80:80"
+    depends_on:
+      - backend
 
-  # --- База данных (PostgreSQL) ---
   db:
     image: postgres:15-alpine
     container_name: akinator_db
@@ -34,7 +35,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432" 
+      - "5432:5432"
 
 volumes:
   postgres_data:
