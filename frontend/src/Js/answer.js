@@ -5,19 +5,14 @@ const mockResult = {
 };
 
 if (answerTitle) {
-    // 1. Выводим имя
     answerTitle.innerText = "Я думаю, это... " + mockResult.name;
     
-    // 2. Выводим фото
-    // Ищем наш новый тег <img> по id
     const photoElement = document.getElementById('character-photo');
     
     if (photoElement) {
-        // Записываем ссылку из "базы" в атрибут src картинки
         photoElement.src = mockResult.image;
         photoElement.alt = mockResult.name;
     }
 
-    // Сброс игры при уходе
     sessionStorage.setItem('akinatorStep', 0);
 }
