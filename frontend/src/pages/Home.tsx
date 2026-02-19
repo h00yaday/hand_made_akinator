@@ -27,7 +27,7 @@ export default function Home(){
 
         {!loading && guess && (
           <div>
-            <ResultCard guess={guess} onCorrect={()=>alert('Поздравляем!')} onWrong={()=>{/* show form below */}} />
+            <ResultCard guess={guess} onPlayAgain={() => { setFeedbackName(''); setDistQ(''); start(); }} />
             <div style={{marginTop:12}}>
               <div>Если это не правильный персонаж, укажите кто это был:</div>
               <input value={feedbackName} onChange={e=>setFeedbackName(e.target.value)} placeholder="Кто это был?" />

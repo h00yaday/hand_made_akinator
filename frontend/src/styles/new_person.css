@@ -1,0 +1,6 @@
+/* New person form */
+#new-person-form{max-width:720px}
+#new-person-form .hint{display:inline-block;margin-left:8px}
+#new-person-form input[type=file]{padding:8px}
+#new-person-form .actions{margin-top:14px}
+#status{color:var(--muted);font-weight:600}

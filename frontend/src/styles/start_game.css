@@ -17,3 +17,12 @@ footer{text-align:center; margin-top:12px; font-size:0.85rem; color:#5b6b74}
 .answer-btn[data-answer="unknown"]{ background:#718096 }  
 .answer-btn[data-answer="probably_yes"]{ background:#38a169 } 
 .answer-btn[data-answer="probably_no"]{ background:#dd6b20 }
+
+/* Start game styles */
+#game{display:flex;flex-direction:column;align-items:center}
+#current-question{font-size:20px}
+.answers{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px;width:100%}
+.answer-btn{padding:12px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
+.answer-btn.btn-primary{background:var(--accent);color:#fff}
+.answer-btn.btn-ghost{background:transparent;border:1px solid #e6eefc;color:var(--muted)}
+@media (max-width:640px){.answers{grid-template-columns:1fr}}

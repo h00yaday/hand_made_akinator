@@ -21,3 +21,9 @@
   box-shadow:0 10px 20px rgba(16,24,40,0.08);
   opacity:0.98;
 }
+
+/* Answer page */
+#current-answer{font-size:22px;color:var(--accent)}
+#answer-image{display:block;margin-top:12px;border-radius:12px;border:1px solid #eef5ff}
+.actions .btn{margin-right:8px}
+.feedback{margin-top:12px}

@@ -1,23 +1,26 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akinator</title>
-    <link rel="stylesheet" href="../styles/home_page.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Akinator — Главная</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <header>
-        <h1>Приветствуем вас в Акинаторе</h1>
+  <main class="card" role="main">
+    <header class="header">
+      <h1>Akinator</h1>
     </header>
-    <main>
-        <section id="game">
-            <h2>Загадай знаменитость</h2>
-            <button id="start-button" onclick="location.href='start_game.html'">Начать игру</button>
-        </section>
-    </main>
+
+    <p class="lead">Добро пожаловать. Начните игру и отвечайте на вопросы — Акинатор попробует угадать персонажа.</p>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="/src/pages/start_game.html">Начать игру</a>
+    </div>
+
     <footer>
-        <p>&copy; 2026 Akinator</p>
+      <p>&copy; 2026 Akinator</p>
     </footer>
+  </main>
 </body>
 </html>

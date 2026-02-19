@@ -1,28 +1,33 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akinator</title>
-    <link rel="stylesheet" href="../styles/start_game.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Akinator — Вопрос</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <header>
-        <h1>Дай ответ на вопрос</h1>
+  <main class="card" role="main">
+    <header class="header">
+      <h1>Дай ответ на вопрос</h1>
     </header>
-    <main>
-        <section id="game">
-            <h2 id="current-question">Загрузка вопроса...</h2>
-            <button class="answer-btn" data-answer="yes">Да</button><br>
-            <button class="answer-btn" data-answer="no">Нет</button><br>
-            <button class="answer-btn" data-answer="unknown">Я не знаю</button><br>
-            <button class="answer-btn" data-answer="probably_yes">Возможно/Скорее да</button><br>
-            <button class="answer-btn" data-answer="probably_no">Скорее всего нет</button><br>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2026 Akinator</p>
-    </footer>
-    <script src="question.js"></script>
+
+    <section id="game">
+      <h2 id="current-question">Загрузка вопроса...</h2>
+      <div class="answers">
+        <button class="btn btn-primary answer-btn" data-answer="yes">Да</button>
+        <button class="btn btn-ghost answer-btn" data-answer="no">Нет</button>
+        <button class="btn btn-ghost answer-btn" data-answer="unknown">Я не знаю</button>
+        <button class="btn btn-ghost answer-btn" data-answer="probably_yes">Возможно</button>
+        <button class="btn btn-ghost answer-btn" data-answer="probably_no">Скорее нет</button>
+      </div>
+
+      <div class="actions" style="margin-top:18px">
+        <a class="btn" href="/src/pages/home_page.html">Вернуться на главную</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="/src/Js/question.js"></script>
 </body>
 </html>

@@ -1,0 +1,3 @@
+/* Authors */
+ul.authors{list-style:none;padding:0;margin:12px 0}
+ul.authors li{padding:10px;border-radius:8px;background:var(--surface);margin-bottom:8px;border:1px solid #eef5ff}

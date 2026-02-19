@@ -1,0 +1,56 @@
+:root{
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --muted:#6b7280;
+  --accent:#2563eb;
+  --accent-2:#0ea5e9;
+  --surface:#f8fafc;
+  --radius:12px;
+  --shadow:0 10px 30px rgba(20,30,60,0.08);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;background:var(--bg);color:#0f172a;-webkit-font-smoothing:antialiased}
+
+main.card{max-width:980px;margin:40px auto;padding:28px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow)}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.header h1{font-size:20px;margin:0}
+
+h1,h2,h3{margin:0 0 8px;font-weight:700}
+p.lead{margin:0 0 16px;color:var(--muted)}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:700;text-decoration:none}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 8px 22px rgba(37,99,235,0.14)}
+.btn-ghost{background:transparent;border:1px solid #e6eefc;color:var(--muted)}
+.btn:active{transform:translateY(1px)}
+
+/* Forms */
+label{display:block;font-weight:600;margin-top:12px}
+input[type=text], textarea, input[type=file], select{width:100%;padding:11px;border-radius:10px;border:1px solid #e6eefc;background:var(--surface);margin-top:8px}
+textarea{min-height:120px}
+.hint{font-size:13px;color:var(--muted);margin-left:8px}
+
+/* Images */
+.img-preview{border-radius:10px;border:1px solid #eef5ff;padding:6px;background:#fff;max-width:220px}
+
+/* Result / guess */
+.result-card{padding:20px;border-radius:14px;background:linear-gradient(180deg,#fff,#fbfdff);box-shadow:var(--shadow)}
+.result-card .guess-body{display:flex;gap:18px;align-items:center}
+.result-card img{border-radius:10px;max-width:220px}
+
+/* Small utilities */
+.lead-muted{color:var(--muted)}
+.center{text-align:center}
+
+/* Footer */
+footer{margin-top:20px;text-align:center;color:var(--muted)}
+
+/* Responsive */
+@media (max-width:640px){
+  main.card{margin:18px;padding:18px}
+  .result-card .guess-body{flex-direction:column;align-items:flex-start}
+  .actions{flex-direction:column}
+}
