@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Добавить персонажа — Akinator</title>
+    <style>
+        :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;line-height:1.4;color:#111}
+        body{margin:0;padding:24px;background:#f6f8fb}
+        .card{max-width:720px;margin:24px auto;padding:20px;background:#fff;border-radius:10px;box-shadow:0 6px 18px rgba(20,30,60,0.08)}
+        h1{margin:0 0 12px;font-size:20px}
+        p.lead{margin:0 0 18px;color:#555}
+        label{display:block;margin:12px 0 6px;font-weight:600}
+        input[type="text"], textarea, select{width:100%;box-sizing:border-box;padding:10px;border:1px solid #d6dbe6;border-radius:6px;background:#fff}
+        textarea{min-height:100px;resize:vertical}
+        .row{display:flex;gap:12px;flex-wrap:wrap}
+        .col{flex:1 1 200px;min-width:0}
+        .small{font-size:13px;color:#666;margin-top:6px}
+        .actions{display:flex;gap:10px;margin-top:18px;align-items:center}
+        button{padding:10px 14px;border-radius:8px;border:0;cursor:pointer}
+        .btn-primary{background:#0366d6;color:#fff}
+        .btn-ghost{background:transparent;border:1px solid #d6dbe6}
+        .img-preview{margin-top:8px;max-width:160px;border-radius:8px;border:1px solid #e6eefc;padding:6px;background:#fbfdff}
+        .hint{font-size:13px;color:#888}
+        .radio-group{display:flex;gap:12px;align-items:center}
+    </style>
+    <link rel="stylesheet" href="../styles/ new_person.css">
+</head>
+<body>
+    <main class="card" role="main">
+        <h1>Кого вы загадали?</h1>
+        <p class="lead">Акинатор ошибся? Помогите ему — расскажите про персонажа, которого вы загадали.</p>
+
+        <form id="new-person-form" method="post" action="/api/characters" enctype="multipart/form-data" novalidate>
+            <label for="name">Имя персонажа</label>
+            <input id="name" name="name" type="text" placeholder="Например: Гарри Поттер" required />
+
+            <label for="aka">Альтернативные имена (через запятую)</label>
+            <input id="aka" name="aka" type="text" placeholder="Другие имена или псевдонимы" />
+
+            <div class="row">
+                <div class="col">
+                    <label for="category">Категория</label>
+                    <select id="category" name="category">
+                        <option value="fictional">Вымышленный</option>
+                        <option value="real">Реальный человек</option>
+                        <option value="historical">Исторический</option>
+                        <option value="other">Другое</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Пол</label>
+                    <div class="radio-group" role="radiogroup" aria-label="Пол персонажа">
+                        <label><input type="radio" name="gender" value="male" checked /> Мужской</label>
+                        <label><input type="radio" name="gender" value="female" /> Женский</label>
+                        <label><input type="radio" name="gender" value="unknown" /> Неизвестно</label>
+                    </div>
+                </div>
+            </div>
+
+            <label for="description">Краткое описание / отличительные черты</label>
+            <textarea id="description" name="description" placeholder="Опишите персонажа, внешность, род занятий, ключевые свойства..." required></textarea>
+
+            <label for="image">Фото или изображение (опционально)</label>
+            <input id="image" name="image" type="file" accept="image/*" />
+            <div id="preview-container" class="img-preview" style="display:none">
+                <img id="preview" src="" alt="Превью изображения" style="max-width:100%;display:block;border-radius:6px" />
+            </div>
+
+            <label for="distinguish">Вопрос, который отличает этого персонажа от близких вариантов</label>
+            <input id="distinguish" name="distinguish" type="text" placeholder="Например: 'Это персонаж из книг или фильмов?'" required />
+            <div class="small">Укажите вопрос, и выберите, каким должен быть правильный ответ на него для вашего персонажа.</div>
+
+            <label>Правильный ответ на этот вопрос для вашего персонажа</label>
+            <div class="radio-group" role="radiogroup" aria-label="Правильный ответ">
+                <label><input type="radio" name="distinguish_answer" value="yes" checked /> Да</label>
+                <label><input type="radio" name="distinguish_answer" value="no" /> Нет</label>
+                <label><input type="radio" name="distinguish_answer" value="unknown" /> Неважно/Другое</label>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn-primary">Отправить</button>
+                <button type="button" class="btn-ghost" id="cancel">Отмена</button>
+                <span class="hint" id="status" aria-live="polite"></span>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        // Simple UI helpers: preview image, basic validation, cancel
+        (function(){
+            const form = document.getElementById('new-person-form');
+            const imgInput = document.getElementById('image');
+            const preview = document.getElementById('preview');
+            const previewContainer = document.getElementById('preview-container');
+            const status = document.getElementById('status');
+            const cancel = document.getElementById('cancel');
+
+            imgInput.addEventListener('change', () => {
+                const file = imgInput.files && imgInput.files[0];
+                if (!file) { previewContainer.style.display='none'; preview.src=''; return; }
+                const url = URL.createObjectURL(file);
+                preview.src = url;
+                previewContainer.style.display = 'block';
+            });
+
+            cancel.addEventListener('click', () => {
+                form.reset();
+                previewContainer.style.display='none';
+                status.textContent = '';
+            });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                status.textContent = 'Сохраняю...';
+                const data = new FormData(form);
+                // Replace URL with your backend endpoint; this example posts to form.action
+                fetch(form.action, { method: 'POST', body: data })
+                    .then(res => {
+                        if (res.ok) return res.json().catch(()=>({}));
+                        throw new Error('Ошибка сети');
+                    })
+                    .then(json => {
+                        status.textContent = 'Спасибо! Персонаж добавлен.';
+                        form.reset();
+                        previewContainer.style.display='none';
+                    })
+                    .catch(err => {
+                        status.textContent = 'Ошибка при отправке. Попробуйте снова.';
+                        console.error(err);
+                    });
+            });
+        })();
+    </script>
+</body>
+</html>
