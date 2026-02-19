@@ -6,6 +6,7 @@ import App from './App.tsx'
 import './styles/home_page.css'
 import './styles/start_game.css'
 import './styles/answer.css'
+import './styles/app.css'
 // -----------------------------
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
