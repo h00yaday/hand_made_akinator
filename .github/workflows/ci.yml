@@ -49,13 +49,19 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' 
+          node-version: '18'
           
-      - name: Install dependencies and build
+      # 1. Сначала обязательно устанавливаем зависимости
+      - name: Install frontend dependencies
         run: |
           cd frontend
           npm install
-          npm run build # Если фронтендер сломал код, эта команда упадет, и GitHub забьет тревогу
+          
+      # 2. Только после этого запускаем билд, линтеры или тесты
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
 
   # 3. ПРОВЕРКА DOCKER
   docker-checks:
