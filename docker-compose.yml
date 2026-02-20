@@ -6,10 +6,9 @@ services:
     container_name: akinator_backend
     volumes:
       - ./backend:/app
-    ports:
-      - "8000:8000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
@@ -22,6 +21,12 @@ services:
     container_name: akinator_frontend
     ports:
       - "80:80"
+    develop:
+      watch:
+        - action: rebuild
+          path: ./frontend/src/
+        - action: rebuild
+          path: ./frontend/index.html
     depends_on:
       - backend
 
@@ -36,6 +41,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d akinator"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

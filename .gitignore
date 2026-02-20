@@ -61,3 +61,5 @@ postgres_data/
 # Obsidian metadata if you keep vault in repo
 .obsidian/
 .DS_Store
+.env.example
+node_modules/
