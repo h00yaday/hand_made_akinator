@@ -62,3 +62,4 @@ postgres_data/
 .obsidian/
 .DS_Store
 .env.example
+node_modules/
