@@ -4,6 +4,7 @@ from sqlalchemy.orm import selectinload
 from src.db.models.game_session import GameSession, GameAnswer
 from src.db.models.question import Question
 from src.db.models.character import Character
+from src.db.models.confidence import Confidence
 
 class GameRepository:
     def __init__(self, db_session: AsyncSession):
@@ -64,3 +65,17 @@ class GameRepository:
         """
         result = await self.db.execute(select(Character).where(Character.id == char_id))
         return result.scalar_one_or_none()
+    
+    async def get_all_questions(self):
+        result = await self.db.execute(select(Question))
+        return [{"id": q.id, "text": q.text} for q in result.scalars().all()]
+
+    async def get_all_characters(self):
+        result = await self.db.execute(select(Character))
+        return [{"id": c.id, "name": c.name} for c in result.scalars().all()]
+
+    async def get_confidence_matrix(self):
+        """Создает словарь {(char_id, q_id): score} для алгоритма"""
+        result = await self.db.execute(select(Confidence))
+        conf_data = result.scalars().all()
+        return {(c.character_id, c.question_id): c.score for c in conf_data}
