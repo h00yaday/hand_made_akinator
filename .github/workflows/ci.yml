@@ -1,0 +1,79 @@
+name: Akinator CI
+
+# Указываем, когда запускать проверки: при пуше в main или при Pull Request-ах
+on:
+  push:
+    branches:
+    - "main"
+    - "develop"
+
+  pull_request:
+    branches:  
+    - "main"
+    - "develop"
+
+
+jobs:
+  # 1. ПРОВЕРКА БЭКЕНДА
+  backend-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11' 
+          
+      - name: Install dependencies
+        run: |
+          cd backend
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 # Устанавливаем линтер
+          
+      - name: Lint with Flake8
+        run: |
+          cd backend
+          # Проверяем код на критические синтаксические ошибки
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+  # 2. ПРОВЕРКА ФРОНТЕНДА
+  frontend-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      # 1. Сначала обязательно устанавливаем зависимости
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm install
+          
+      # 2. Только после этого запускаем билд, линтеры или тесты
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+
+  # 3. ПРОВЕРКА DOCKER
+  docker-checks:
+    runs-on: ubuntu-latest
+    needs: [backend-checks, frontend-checks] 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Test Docker Compose Build
+        run: |
+          # Создаем фиктивный .env из примера, чтобы докеру было что читать
+          cp .env.example .env 
+          # Пробуем собрать контейнеры (без запуска)
+          docker compose build
