@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api import deps  # Используем твои зависимости
+from src.api import deps  
 from src.db.repositories.game_repo import GameRepository
 from src.services.logic import LogicService
 from src.schemas.game import (
@@ -17,22 +17,16 @@ router = APIRouter()
 @router.post("/start", response_model=GameStartResponse)
 async def start_game(db: AsyncSession = Depends(deps.get_db)):
     repo = GameRepository(db)
-    
-    # 1. Создаем сессию
     session = await repo.create_session()
     
-    # 2. Получаем первый вопрос через LogicService
-    first_q_id = LogicService.get_start_question_id()
-    question_data = await repo.get_question_by_id(first_q_id)
+    first_q_id = await LogicService.get_start_question_id(repo)
+    q_data = await repo.get_question_by_id(first_q_id)
     
-    if not question_data:
-        raise HTTPException(status_code=404, detail="Вопросы не найдены в базе")
-
     return GameStartResponse(
         session_id=str(session.id),
         question=QuestionSchema(
-            id=question_data.id,
-            text=question_data.text,
+            id=q_data.id,
+            text=q_data.text,
             step=1,
             progression=0.0
         )
@@ -42,38 +36,36 @@ async def start_game(db: AsyncSession = Depends(deps.get_db)):
 async def process_answer(request: GameAnswerRequest, db: AsyncSession = Depends(deps.get_db)):
     repo = GameRepository(db)
     
-    # Маппинг: 1: yes, 0: no, 2: dont_know
-    answer_map = {1: "yes", 0: "no", 2: "dont_know"}
-    answer_text = answer_map.get(request.answer_id, "dont_know")
-
-    # 1. Сохраняем ответ в базу
+    # 1. Сохраняем ответ пользователя
+    answer_text = {1: "yes", 0: "no", 2: "dont_know"}.get(request.answer_id, "dont_know")
     await repo.save_answer(request.session_id, request.question_id, answer_text)
     
-    # 2. Берем историю и идем к аналитику (через LogicService)
+    # 2. Получаем историю и вызываем новый алгоритм
     history = await repo.get_session_history(request.session_id)
-    decision = LogicService.get_next_step(history)
+    decision = await LogicService.get_next_step(repo, history)
     
-    # 3. Формируем ответ согласно твоей схеме GameStepResponse
-    if decision["status"] == "question":
-        next_q = await repo.get_question_by_id(decision["question_id"])
+    # 3. Обработка решения алгоритма
+    if decision['type'] == 'question':
+        next_q = await repo.get_question_by_id(decision['question_id'])
         return GameStepResponse(
             type="question",
             payload=QuestionSchema(
                 id=next_q.id,
                 text=next_q.text,
                 step=len(history) + 1,
-                progression=len(history) * 10.0 # Временный прогресс
+                progression=0.0 # Можно будет добавить расчет прогресса позже
             )
         )
     else:
-        char = await repo.get_character_by_id(decision["character_id"])
+        # Алгоритм готов угадать персонажа
+        char = await repo.get_character_by_id(decision['character_id'])
         return GameStepResponse(
             type="guess",
             payload=CharacterGuess(
                 character_id=char.id,
                 name=char.name,
-                description=char.description or "",
-                image_url="https://api.dicebear.com/7.x/bottts/svg", 
-                confidence=decision.get("probability", 0.9)
+                description=char.description or "Тайный персонаж",
+                image_url="https://api.dicebear.com/7.x/bottts/svg", # Заглушка для фото
+                confidence=decision['probability']
             )
         )
