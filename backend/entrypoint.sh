@@ -1,12 +1,14 @@
 #!/bin/sh
 
-# Прерываем выполнение скрипта, если какая-то команда упала с ошибкой
+# Прерывать выполнение при ошибке
 set -e
 
-# Здесь в будущем будет команда миграций:
-# echo "Running migrations..."
-# alembic upgrade head
+echo "--- Ожидание готовности базы данных ---"
+# Если в docker-compose настроен healthcheck, 
+# скрипт просто дождется его завершения.
 
-# Запускаем сам сервер (exec подменяет процесс скрипта на процесс uvicorn)
-echo "Starting backend server..."
+echo "--- Применение миграций Alembic ---"
+alembic upgrade head
+
+echo "--- Запуск сервера Uvicorn ---"
 exec uvicorn src.main:app --host 0.0.0.0 --port 8000
