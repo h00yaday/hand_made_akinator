@@ -17,7 +17,6 @@ services:
       - POSTGRES_HOST=db
 
   frontend:
-    # Теперь мы строим из Dockerfile, а не берем готовый image
     build: ./frontend
     container_name: akinator_frontend
     ports:
